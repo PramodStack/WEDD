@@ -1475,6 +1475,296 @@ footer{
   .family-block{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
   .family-block .fam-members{margin-top:0}
 }
+
+/*─── EVENT STATUS BADGE ────────────────────────────────*/
+.ev-status{
+  position:absolute;top:12px;right:12px;z-index:6;
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  font-family:'Cinzel',serif;font-size:0.55rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  font-weight:600;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.5);
+  transition:all 0.4s ease;
+}
+.ev-status.upcoming{
+  background:rgba(212,175,55,0.18);
+  color:#B8860B;
+  box-shadow:0 2px 10px rgba(212,175,55,0.1);
+}
+.ev-status.live{
+  background:linear-gradient(135deg,rgba(233,30,99,0.25),rgba(194,24,88,0.35));
+  color:#fff;
+  box-shadow:0 0 15px rgba(233,30,99,0.3),0 2px 10px rgba(194,24,88,0.2);
+  border-color:rgba(255,255,255,0.6);
+  animation:livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse{
+  0%,100%{box-shadow:0 0 10px rgba(233,30,99,0.2),0 2px 8px rgba(194,24,88,0.15)}
+  50%{box-shadow:0 0 25px rgba(233,30,99,0.45),0 2px 12px rgba(194,24,88,0.3)}
+}
+.ev-status.live .ev-status-dot{
+  animation:liveDot 1.2s ease-in-out infinite;
+}
+@keyframes liveDot{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.5);opacity:0.6}
+}
+.ev-status.completed{
+  background:rgba(76,175,80,0.15);
+  color:#4CAF50;
+  box-shadow:0 2px 10px rgba(76,175,80,0.1);
+}
+.ev-status-dot{
+  width:6px;height:6px;border-radius:50%;display:inline-block;
+}
+.ev-status.upcoming .ev-status-dot{background:#D4AF37;}
+.ev-status.live .ev-status-dot{background:#fff;}
+.ev-status.completed .ev-status-dot{background:#4CAF50;}
+/* Live shine sweep */
+.ev-status.live::after{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  animation:liveShine 2.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes liveShine{
+  0%{transform:translateX(-100%)}
+  50%{transform:translateX(100%)}
+  100%{transform:translateX(100%)}
+}
+/* Live sparkle particles */
+.ev-status-live-sparkle{
+  position:absolute;pointer-events:none;z-index:7;
+  font-size:0.6rem;opacity:0;
+}
+.ev-status.live .ev-status-live-sparkle{
+  animation:liveSparkle 1.5s ease-out infinite;
+}
+@keyframes liveSparkle{
+  0%{transform:translate(0,0) scale(0.5);opacity:0.8}
+  100%{transform:translate(var(--sx),var(--sy)) scale(0);opacity:0}
+}
+
+/*─── ADMIN PANEL ────────────────────────────────────────*/
+#admin-btn{
+  position:fixed;bottom:1.5rem;left:calc(1.2rem + 58px);
+  z-index:500;width:38px;height:38px;
+  border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,0.5);
+  border:1.5px solid rgba(212,175,55,0.45);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 2px 12px rgba(194,24,88,0.1);
+  transition:all 0.3s ease;
+  color:#B8860B;font-size:0.9rem;
+}
+#admin-btn:hover,#admin-btn:active{
+  background:rgba(248,200,220,0.5);
+  transform:scale(1.1);
+  border-color:rgba(212,175,55,0.8);
+  box-shadow:0 4px 15px rgba(214,51,108,0.15);
+}
+#admin-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;transition:opacity 0.4s ease;
+}
+#admin-overlay.show{display:flex;opacity:1}
+.admin-panel{
+  background:linear-gradient(135deg,rgba(255,255,255,0.75),rgba(255,240,248,0.7),rgba(255,228,236,0.65));
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:2px solid rgba(212,175,55,0.55);
+  border-radius:22px;
+  padding:2rem;
+  max-width:520px;width:100%;
+  max-height:85vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(194,24,88,0.15),0 0 40px rgba(248,200,220,0.2);
+  position:relative;
+  transform:scale(0.9) translateY(20px);opacity:0;
+  transition:all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#admin-overlay.show .admin-panel{
+  transform:scale(1) translateY(0);opacity:1;
+}
+.admin-panel::before{
+  content:'❀';position:absolute;top:-14px;left:-10px;
+  font-size:1.8rem;color:rgba(233,30,99,0.3);
+  transform:rotate(-20deg);pointer-events:none;
+}
+.admin-panel::after{
+  content:'❀';position:absolute;bottom:-12px;right:-8px;
+  font-size:1.6rem;color:rgba(233,30,99,0.3);
+  transform:rotate(15deg);pointer-events:none;
+}
+.admin-title{
+  font-family:'Great Vibes',cursive;font-size:2rem;
+  color:#D6336C;text-align:center;margin-bottom:0.3rem;
+}
+.admin-sub{
+  font-family:'Cinzel',serif;font-size:0.55rem;
+  letter-spacing:0.25em;color:#B8860B;
+  text-transform:uppercase;text-align:center;margin-bottom:1.5rem;
+}
+.admin-close{
+  position:absolute;top:12px;right:12px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  border:1.5px solid rgba(212,175,55,0.4);
+  color:#B8860B;font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s ease;
+}
+.admin-close:hover{background:rgba(248,200,220,0.5);transform:scale(1.1)}
+.admin-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem;
+}
+.admin-stat{
+  background:rgba(255,255,255,0.5);
+  border:1.5px solid rgba(212,175,55,0.35);
+  border-radius:12px;padding:0.8rem;text-align:center;
+}
+.admin-stat-num{
+  font-family:'Cinzel',serif;font-size:1.4rem;font-weight:600;
+  background:linear-gradient(135deg,#E91E63,#C2185B);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.admin-stat-label{
+  font-family:'Cinzel',serif;font-size:0.5rem;
+  letter-spacing:0.15em;color:#B8860B;text-transform:uppercase;
+  margin-top:0.2rem;
+}
+.admin-record{
+  background:rgba(255,255,255,0.45);
+  border:1.5px solid rgba(212,175,55,0.3);
+  border-radius:14px;padding:1rem;margin-bottom:0.7rem;
+  position:relative;transition:all 0.3s ease;
+}
+.admin-record:hover{
+  border-color:rgba(212,175,55,0.6);
+  box-shadow:0 4px 15px rgba(194,24,88,0.08);
+}
+.admin-record-field{
+  font-size:0.82rem;color:#5C4033;line-height:1.5;
+}
+.admin-record-field strong{
+  color:#9D174D;font-weight:600;
+  font-family:'Cinzel',serif;font-size:0.55rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+}
+.admin-record-del{
+  position:absolute;top:8px;right:8px;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(233,30,99,0.1);
+  border:1px solid rgba(233,30,99,0.3);
+  color:#D6336C;font-size:0.75rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s ease;
+}
+.admin-record-del:hover{
+  background:rgba(233,30,99,0.25);transform:scale(1.15);
+}
+.admin-empty{
+  text-align:center;padding:2rem;color:#B56576;font-style:italic;
+}
+/* Password popup */
+.admin-pw-wrap{
+  text-align:center;padding:1rem 0;
+}
+.admin-pw-wrap input{
+  background:rgba(255,255,255,0.7);
+  border:1.5px solid rgba(212,175,55,0.5);
+  border-radius:10px;padding:0.7rem 1rem;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;
+  color:var(--text-dark);outline:none;width:100%;max-width:240px;
+  text-align:center;letter-spacing:0.15em;
+}
+.admin-pw-wrap input:focus{
+  border-color:rgba(233,30,99,0.6);
+  box-shadow:0 0 0 3px rgba(248,200,220,0.3);
+}
+.admin-pw-btn{
+  margin-top:0.8rem;padding:0.6rem 1.8rem;
+  background:linear-gradient(135deg,#E91E63,#C2185B);
+  color:#fff;border:none;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:0.65rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  font-weight:600;cursor:pointer;transition:all 0.3s ease;
+  box-shadow:0 4px 15px rgba(194,24,88,0.2);
+}
+.admin-pw-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(194,24,88,0.3)}
+.admin-pw-btn:active{transform:scale(0.97)}
+.admin-pw-error{
+  color:#E91E63;font-size:0.8rem;margin-top:0.5rem;
+  opacity:0;transition:opacity 0.3s ease;
+}
+.admin-pw-error.show{opacity:1}
+/* Confirm delete popup */
+.admin-confirm-overlay{
+  position:fixed;inset:0;z-index:3000;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.3s ease;
+}
+.admin-confirm-overlay.show{display:flex;opacity:1}
+.admin-confirm-box{
+  background:linear-gradient(135deg,rgba(255,255,255,0.9),rgba(255,240,248,0.85));
+  border:2px solid rgba(212,175,55,0.5);
+  border-radius:18px;padding:1.8rem;
+  max-width:320px;width:90%;text-align:center;
+  box-shadow:0 12px 40px rgba(194,24,88,0.15);
+  transform:scale(0.95);opacity:0;
+  transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.admin-confirm-overlay.show .admin-confirm-box{
+  transform:scale(1);opacity:1;
+}
+.admin-confirm-box h4{
+  font-family:'Great Vibes',cursive;font-size:1.6rem;
+  color:#D6336C;margin-bottom:0.5rem;
+}
+.admin-confirm-box p{
+  color:#5C4033;font-size:0.9rem;margin-bottom:1.2rem;
+}
+.admin-confirm-btns{display:flex;gap:0.6rem;justify-content:center}
+.admin-confirm-btns button{
+  padding:0.5rem 1.4rem;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:0.6rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  font-weight:600;cursor:pointer;transition:all 0.3s ease;
+}
+.admin-confirm-yes{
+  background:linear-gradient(135deg,#E91E63,#C2185B);
+  color:#fff;border:none;
+  box-shadow:0 4px 15px rgba(194,24,88,0.2);
+}
+.admin-confirm-no{
+  background:rgba(255,255,255,0.6);
+  color:#B8860B;border:1.5px solid rgba(212,175,55,0.5);
+}
+.admin-confirm-yes:hover{transform:translateY(-2px)}
+.admin-confirm-no:hover{background:rgba(212,175,55,0.15)}
+/* Clear all button */
+.admin-clear-all{
+  display:block;width:100%;margin-top:1rem;padding:0.6rem;
+  background:rgba(233,30,99,0.08);
+  border:1.5px solid rgba(233,30,99,0.3);
+  border-radius:10px;
+  font-family:'Cinzel',serif;font-size:0.6rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:#D6336C;font-weight:600;cursor:pointer;
+  transition:all 0.3s ease;
+}
+.admin-clear-all:hover{
+  background:rgba(233,30,99,0.18);
+  transform:translateY(-2px);
+}
 </style>
 <base target="_blank">
 <script src="https://www.youtube.com/iframe_api"></script>
@@ -1532,6 +1822,9 @@ footer{
 <button id="music-btn" aria-label="Toggle music">
   <span class="music-icon" id="music-icon">🎵</span>
 </button>
+
+<!--─── ADMIN BUTTON ─────────────────────────────────────-->
+<button id="admin-btn" aria-label="Admin panel" title="Host Admin Panel">⚙️</button>
 
 <!--─── BACK TO TOP ──────────────────────────────────────-->
 <button id="btt" aria-label="Back to top">↑</button>
@@ -1621,7 +1914,7 @@ footer{
   </div>
   <div class="events-grid">
 
-    <div class="ev-card reveal">
+    <div class="ev-card reveal" data-event-start="2026-07-17T19:00:00+05:30" data-event-end="2026-07-17T23:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -1630,6 +1923,7 @@ footer{
         <span class="ev-heart" style="left:70%;top:65%;animation-delay:0.2s">💕</span>
         <span class="ev-heart" style="left:40%;top:80%;animation-delay:0.4s">❤️</span>
       </div>
+      <div class="ev-status upcoming" id="status-sangeet"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
       <div class="ev-body">
         <span class="ev-icon">🎵</span>
         <h3>Sangeet Night</h3>
@@ -1639,7 +1933,7 @@ footer{
       </div>
     </div>
 
-    <div class="ev-card reveal">
+    <div class="ev-card reveal" data-event-start="2026-07-18T10:00:00+05:30" data-event-end="2026-07-18T13:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -1648,6 +1942,7 @@ footer{
         <span class="ev-heart" style="left:75%;top:60%;animation-delay:0.15s">💛</span>
         <span class="ev-heart" style="left:50%;top:78%;animation-delay:0.3s">✨</span>
       </div>
+      <div class="ev-status upcoming" id="status-haldi"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
       <div class="ev-body">
         <span class="ev-icon">🌼</span>
         <h3>Haldi Ceremony</h3>
@@ -1657,7 +1952,7 @@ footer{
       </div>
     </div>
 
-    <div class="ev-card reveal">
+    <div class="ev-card reveal" data-event-start="2026-07-18T18:00:00+05:30" data-event-end="2026-07-18T22:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -1666,6 +1961,7 @@ footer{
         <span class="ev-heart" style="left:72%;top:68%;animation-delay:0.2s">💚</span>
         <span class="ev-heart" style="left:45%;top:82%;animation-delay:0.4s">🌸</span>
       </div>
+      <div class="ev-status upcoming" id="status-mehendi"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
       <div class="ev-body">
         <span class="ev-icon">🌿</span>
         <h3>Mehendi Ceremony</h3>
@@ -1675,7 +1971,7 @@ footer{
       </div>
     </div>
 
-    <div class="ev-card reveal">
+    <div class="ev-card reveal" data-event-start="2026-07-19T11:00:00+05:30" data-event-end="2026-07-19T15:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -1684,6 +1980,7 @@ footer{
         <span class="ev-heart" style="left:78%;top:62%;animation-delay:0.18s">❤️</span>
         <span class="ev-heart" style="left:48%;top:80%;animation-delay:0.35s">✨</span>
       </div>
+      <div class="ev-status upcoming" id="status-wedding"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
       <div class="ev-body">
         <span class="ev-icon">💍</span>
         <h3>Wedding Ceremony</h3>
@@ -1693,7 +1990,7 @@ footer{
       </div>
     </div>
 
-    <div class="ev-card reveal" style="grid-column:1/-1">
+    <div class="ev-card reveal" data-event-start="2026-07-20T19:00:00+05:30" data-event-end="2026-07-20T23:00:00+05:30" style="grid-column:1/-1">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -1702,6 +1999,7 @@ footer{
         <span class="ev-heart" style="left:70%;top:65%;animation-delay:0.15s">🥂</span>
         <span class="ev-heart" style="left:42%;top:80%;animation-delay:0.3s">💖</span>
       </div>
+      <div class="ev-status upcoming" id="status-reception"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
       <div class="ev-body">
         <span class="ev-icon">🌹</span>
         <h3>Reception</h3>
@@ -1865,6 +2163,48 @@ footer{
   <p class="ft-copy">© 2026 Debashis & Priyanka · Made with ❤️</p>
 </footer>
 
+<!--─── ADMIN PANEL OVERLAY ────────────────────────────────-->
+<div id="admin-overlay">
+  <div class="admin-panel" id="admin-panel">
+    <button class="admin-close" id="admin-close">✕</button>
+    <div class="admin-title">RSVP Records</div>
+    <div class="admin-sub">Host Dashboard</div>
+    <div id="admin-content">
+      <div class="admin-pw-wrap" id="admin-pw-wrap">
+        <p style="color:#5C4033;font-size:0.9rem;margin-bottom:1rem;">Enter Host Password</p>
+        <input type="password" id="admin-pw-input" placeholder="••••••" autocomplete="off"/>
+        <div class="admin-pw-error" id="admin-pw-error">Incorrect password</div>
+        <button class="admin-pw-btn" id="admin-pw-submit">Unlock</button>
+      </div>
+      <div id="admin-dashboard" style="display:none">
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="admin-total-guests">0</div>
+            <div class="admin-stat-label">Total Guests</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="admin-total-records">0</div>
+            <div class="admin-stat-label">Submissions</div>
+          </div>
+        </div>
+        <div id="admin-records-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--─── DELETE CONFIRM OVERLAY ───────────────────────────-->
+<div class="admin-confirm-overlay" id="admin-confirm-overlay">
+  <div class="admin-confirm-box">
+    <h4>Confirm Delete</h4>
+    <p>Delete this RSVP record?</p>
+    <div class="admin-confirm-btns">
+      <button class="admin-confirm-yes" id="admin-confirm-yes">Yes, Delete</button>
+      <button class="admin-confirm-no" id="admin-confirm-no">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
 window.dpEnvelopeOpened = false;
 document.addEventListener("DOMContentLoaded", initMusic);
@@ -1956,6 +2296,8 @@ function initPageAfterLoad(){
   initScratchCard();
   initRsvp();
   initEventCards();
+  initEventStatus();
+  initAdminPanel();
 
   // Check if already revealed from localStorage
   setTimeout(()=>{
@@ -2437,8 +2779,10 @@ function initEventCards(){
 }
 
 /* ════════════════════════════════════════════════════════
-   RSVP
+   RSVP — localStorage + Premium Submit Animation
 ════════════════════════════════════════════════════════ */
+const RSVP_STORAGE_KEY = 'weddingRSVPRecords';
+
 function initRsvp(){
   // Ripple effect for premium button
   const btn=document.querySelector('.rsvp-premium-wrap .submit-btn');
@@ -2462,14 +2806,248 @@ function initRsvp(){
     const p=document.getElementById('rp').value.trim();
     const g=document.getElementById('rg').value;
     if(!n||!p||!g){alert('Please fill in all required fields (*)');return;}
+
+    const now = new Date();
+    const data = {
+      name: n,
+      phone: p,
+      email: document.getElementById('re').value.trim(),
+      guests: g,
+      event: document.getElementById('rev').value,
+      message: document.getElementById('rm').value.trim(),
+      date: now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),
+      time: now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
+      ts: now.toISOString()
+    };
+
+    // Save to localStorage (append to existing)
     try{
-      const arr=JSON.parse(localStorage.getItem('dpRsvp')||'[]');
-      arr.push({name:n,phone:p,email:document.getElementById('re').value,guests:g,event:document.getElementById('rev').value,message:document.getElementById('rm').value,ts:new Date().toISOString()});
-      localStorage.setItem('dpRsvp',JSON.stringify(arr));
-    }catch(err){}
+      const arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
+      arr.push(data);
+      localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(arr));
+    }catch(err){console.error('RSVP save error:',err);}
+
+    // Clear form
+    this.reset();
+
+    // Show premium success with confetti + petals burst
     this.style.display='none';
-    document.getElementById('rsvp-ok').style.display='block';
+    const ok = document.getElementById('rsvp-ok');
+    ok.innerHTML = '<div class="check">💌</div><h3>Thank You!</h3><p>Thank you for sharing our special day ❤️</p><p style="margin-top:0.5rem;opacity:0.6;font-size:0.9rem">We look forward to celebrating with you!</p>';
+    ok.style.display='block';
+
+    // Launch confetti + petal burst
+    launchConfetti();
+    launchRsvpPetals();
   });
+}
+
+// RSVP petal burst animation
+function launchRsvpPetals(){
+  const wrap = document.querySelector('.rsvp-premium-wrap');
+  if(!wrap) return;
+  const colors = ['#D96C8D','#F7D6DF','#E91E63','#F48FB1','#F8C8DC','#D4AF37','#FFE4E1','#FF69B4'];
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.style.cssText = `
+      position:absolute;
+      width:${6+Math.random()*14}px;height:${6+Math.random()*14}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:50% 10% 50% 10%;
+      left:50%;top:50%;
+      pointer-events:none;z-index:100;
+      filter:drop-shadow(0 2px 4px rgba(194,24,88,0.2));
+    `;
+    wrap.appendChild(p);
+    const angle = Math.random()*Math.PI*2;
+    const dist = 60 + Math.random()*120;
+    const dur = 0.8 + Math.random()*0.6;
+    p.animate([
+      {transform:'translate(-50%,-50%) scale(1)',opacity:1},
+      {transform:`translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px)) rotate(${Math.random()*360}deg) scale(0)`,opacity:0}
+    ],{duration:dur*1000,easing:'ease-out',fill:'forwards'});
+    setTimeout(()=>{if(p.parentNode)p.remove();},dur*1000+50);
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   EVENT STATUS SYSTEM
+════════════════════════════════════════════════════════ */
+function initEventStatus(){
+  const cards = document.querySelectorAll('.ev-card[data-event-start]');
+  function update(){
+    const now = new Date();
+    cards.forEach(card=>{
+      const start = new Date(card.dataset.eventStart);
+      const end = new Date(card.dataset.eventEnd);
+      const badge = card.querySelector('.ev-status');
+      const text = badge.querySelector('.ev-status-text');
+      if(!badge) return;
+      // Remove old classes
+      badge.classList.remove('upcoming','live','completed');
+      // Remove old sparkle particles
+      badge.querySelectorAll('.ev-status-live-sparkle').forEach(s=>s.remove());
+
+      if(now < start){
+        badge.classList.add('upcoming');
+        text.textContent = 'Upcoming';
+      }else if(now >= start && now <= end){
+        badge.classList.add('live');
+        text.textContent = 'Live Now';
+        // Add sparkle particles for live
+        for(let i=0;i<3;i++){
+          const sp = document.createElement('span');
+          sp.className = 'ev-status-live-sparkle';
+          sp.textContent = ['✨','💖','💫'][i];
+          sp.style.cssText = `left:${10+i*30}%;top:${-8}px;--sx:${(Math.random()-0.5)*30}px;--sy:${-15-Math.random()*15}px;animation-delay:${i*0.4}s;`;
+          badge.appendChild(sp);
+        }
+      }else{
+        badge.classList.add('completed');
+        text.textContent = 'Completed';
+      }
+    });
+  }
+  update();
+  setInterval(update,30000); // Check every 30 seconds
+}
+
+/* ════════════════════════════════════════════════════════
+   ADMIN PANEL
+════════════════════════════════════════════════════════ */
+const ADMIN_PASSWORD = '1234';
+let adminDeleteTarget = null;
+
+function initAdminPanel(){
+  const btn = document.getElementById('admin-btn');
+  const overlay = document.getElementById('admin-overlay');
+  const close = document.getElementById('admin-close');
+  const pwSubmit = document.getElementById('admin-pw-submit');
+  const pwInput = document.getElementById('admin-pw-input');
+  const pwError = document.getElementById('admin-pw-error');
+  const pwWrap = document.getElementById('admin-pw-wrap');
+  const dashboard = document.getElementById('admin-dashboard');
+  const confirmOverlay = document.getElementById('admin-confirm-overlay');
+  const confirmYes = document.getElementById('admin-confirm-yes');
+  const confirmNo = document.getElementById('admin-confirm-no');
+
+  if(!btn) return;
+
+  btn.addEventListener('click',()=>{
+    overlay.classList.add('show');
+    pwInput.value = '';
+    pwError.classList.remove('show');
+    pwWrap.style.display = 'block';
+    dashboard.style.display = 'none';
+    setTimeout(()=>pwInput.focus(),400);
+  });
+
+  close.addEventListener('click',()=>{
+    overlay.classList.remove('show');
+    setTimeout(()=>{
+      pwWrap.style.display = 'block';
+      dashboard.style.display = 'none';
+      pwInput.value = '';
+      pwError.classList.remove('show');
+    },400);
+  });
+
+  overlay.addEventListener('click',e=>{
+    if(e.target === overlay) close.click();
+  });
+
+  pwSubmit.addEventListener('click',()=>{
+    if(pwInput.value !== ADMIN_PASSWORD){
+      pwError.classList.add('show');
+      pwInput.value = '';
+      pwInput.focus();
+      return;
+    }
+    pwError.classList.remove('show');
+    pwWrap.style.display = 'none';
+    dashboard.style.display = 'block';
+    renderAdminRecords();
+  });
+
+  pwInput.addEventListener('keydown',e=>{
+    if(e.key === 'Enter') pwSubmit.click();
+  });
+
+  confirmNo.addEventListener('click',()=>{
+    confirmOverlay.classList.remove('show');
+    adminDeleteTarget = null;
+  });
+
+  confirmYes.addEventListener('click',()=>{
+    if(!adminDeleteTarget) return;
+    try{
+      const arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
+      const filtered = arr.filter((_,idx)=>idx !== adminDeleteTarget);
+      localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(filtered));
+      renderAdminRecords();
+    }catch(err){}
+    confirmOverlay.classList.remove('show');
+    adminDeleteTarget = null;
+  });
+
+  confirmOverlay.addEventListener('click',e=>{
+    if(e.target === confirmOverlay) confirmNo.click();
+  });
+}
+
+function renderAdminRecords(){
+  const list = document.getElementById('admin-records-list');
+  const totalGuests = document.getElementById('admin-total-guests');
+  const totalRecords = document.getElementById('admin-total-records');
+
+  let records = [];
+  try{
+    records = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
+  }catch(err){}
+
+  if(records.length === 0){
+    list.innerHTML = '<div class="admin-empty">No RSVP records yet</div>';
+    totalGuests.textContent = '0';
+    totalRecords.textContent = '0';
+    return;
+  }
+
+  let guestCount = 0;
+  records.forEach(r=>{
+    const g = parseInt(r.guests);
+    if(!isNaN(g)) guestCount += g;
+  });
+
+  totalGuests.textContent = guestCount;
+  totalRecords.textContent = records.length;
+
+  list.innerHTML = records.map((r,idx)=>`
+    <div class="admin-record">
+      <button class="admin-record-del" data-idx="${idx}" title="Delete">🗑</button>
+      <div class="admin-record-field"><strong>Name:</strong> ${escapeHtml(r.name)}</div>
+      <div class="admin-record-field"><strong>Phone:</strong> ${escapeHtml(r.phone)}</div>
+      ${r.email?`<div class="admin-record-field"><strong>Email:</strong> ${escapeHtml(r.email)}</div>`:''}
+      <div class="admin-record-field"><strong>Guests:</strong> ${escapeHtml(r.guests)}</div>
+      ${r.event?`<div class="admin-record-field"><strong>Event:</strong> ${escapeHtml(r.event)}</div>`:''}
+      ${r.message?`<div class="admin-record-field"><strong>Message:</strong> ${escapeHtml(r.message)}</div>`:''}
+      <div class="admin-record-field"><strong>Date:</strong> ${escapeHtml(r.date||'—')}</div>
+      <div class="admin-record-field"><strong>Time:</strong> ${escapeHtml(r.time||'—')}</div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.admin-record-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      adminDeleteTarget = parseInt(btn.dataset.idx);
+      document.getElementById('admin-confirm-overlay').classList.add('show');
+    });
+  });
+}
+
+function escapeHtml(text){
+  if(!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // Fallback: if YT API already loaded before this script executed
