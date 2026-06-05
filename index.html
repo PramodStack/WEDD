@@ -769,48 +769,183 @@ body{
 }
 
 /*─── EVENTS GRID ────────────────────────────────────────*/
-.events-grid{display:flex;flex-direction:column;gap:1.2rem;margin-top:0.5rem}
+.events-grid{display:flex;flex-direction:column;gap:1.4rem;margin-top:0.5rem}
+
+/*─── PREMIUM EVENT CARDS REDESIGN ─────────────────────*/
 .ev-card{
-  border-radius:16px;overflow:hidden;
-  border:1.5px solid rgba(212,175,55,0.35);
-  transition:transform 0.3s,box-shadow 0.3s;
-  background:rgba(255,255,255,0.6);
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1.5px solid rgba(212,175,55,0.45);
+  border-radius:18px;
+  padding:2rem 1.8rem;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94),
+             box-shadow 0.5s ease,
+             border-color 0.4s ease;
+  box-shadow:0 8px 32px rgba(194,24,88,0.08),
+             inset 0 1px 0 rgba(255,255,255,0.8);
+  opacity:0;
+  transform:translateY(40px) scale(0.95);
 }
-.ev-card:active{transform:scale(0.98)}
-@media(min-width:600px){
-  .events-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:0.5rem}
+.ev-card.vis{
+  opacity:1;
+  transform:translateY(0) scale(1);
 }
-.ev-illus{
-  height:160px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Great Vibes',cursive;
-  font-size:2.2rem;
-  color:rgba(255,255,255,0.85);
-  position:relative;overflow:hidden;
+/* Staggered entrance */
+.events-grid .ev-card:nth-child(1){transition-delay:0.1s}
+.events-grid .ev-card:nth-child(2){transition-delay:0.2s}
+.events-grid .ev-card:nth-child(3){transition-delay:0.3s}
+.events-grid .ev-card:nth-child(4){transition-delay:0.4s}
+.events-grid .ev-card:nth-child(5){transition-delay:0.5s}
+
+/* Floral corners */
+.ev-card::before{
+  content:'❀';position:absolute;
+  top:10px;left:12px;
+  font-size:1.6rem;
+  color:rgba(233,30,99,0.25);
+  transform:rotate(-20deg);
+  pointer-events:none;
+  transition:all 0.4s ease;
+  filter:drop-shadow(0 2px 4px rgba(194,24,88,0.15));
 }
-.ev-body{padding:1.2rem}
+.ev-card::after{
+  content:'❀';position:absolute;
+  bottom:10px;right:12px;
+  font-size:1.5rem;
+  color:rgba(233,30,99,0.25);
+  transform:rotate(15deg);
+  pointer-events:none;
+  transition:all 0.4s ease;
+  filter:drop-shadow(0 2px 4px rgba(194,24,88,0.15));
+}
+.ev-card:hover::before,.ev-card:active::before{
+  transform:rotate(-20deg) scale(1.2);
+  color:rgba(233,30,99,0.4);
+}
+.ev-card:hover::after,.ev-card:active::after{
+  transform:rotate(15deg) scale(1.2);
+  color:rgba(233,30,99,0.4);
+}
+
+/* Golden corner brackets */
+.ev-corner-tl,.ev-corner-tr,.ev-corner-bl,.ev-corner-br{
+  position:absolute;width:36px;height:36px;
+  pointer-events:none;transition:all 0.4s ease;
+}
+.ev-corner-tl{top:8px;left:8px;border-top:2px solid rgba(212,175,55,0.5);border-left:2px solid rgba(212,175,55,0.5);border-radius:12px 0 0 0;}
+.ev-corner-tr{top:8px;right:8px;border-top:2px solid rgba(212,175,55,0.5);border-right:2px solid rgba(212,175,55,0.5);border-radius:0 12px 0 0;}
+.ev-corner-bl{bottom:8px;left:8px;border-bottom:2px solid rgba(212,175,55,0.5);border-left:2px solid rgba(212,175,55,0.5);border-radius:0 0 0 12px;}
+.ev-corner-br{bottom:8px;right:8px;border-bottom:2px solid rgba(212,175,55,0.5);border-right:2px solid rgba(212,175,55,0.5);border-radius:0 0 12px 0;}
+.ev-card:hover .ev-corner-tl,.ev-card:active .ev-corner-tl,
+.ev-card:hover .ev-corner-tr,.ev-card:active .ev-corner-tr,
+.ev-card:hover .ev-corner-bl,.ev-card:active .ev-corner-bl,
+.ev-card:hover .ev-corner-br,.ev-card:active .ev-corner-br{
+  width:44px;height:44px;
+  border-color:rgba(212,175,55,0.85);
+}
+
+/* Shine sweep */
+.ev-shine{
+  position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.45),transparent);
+  transition:left 0.8s ease;
+  pointer-events:none;z-index:3;
+}
+.ev-card:hover .ev-shine,.ev-card:active .ev-shine{left:100%;}
+
+/* Hover lift & glow */
+.ev-card:hover,.ev-card:active{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 20px 60px rgba(214,51,108,0.15),
+             0 0 40px rgba(212,175,55,0.12),
+             inset 0 1px 0 rgba(255,255,255,0.9);
+  border-color:rgba(212,175,55,0.75);
+}
+
+/* Event icon */
+.ev-icon{
+  font-size:2.4rem;
+  display:block;text-align:center;
+  margin-bottom:0.6rem;
+  filter:drop-shadow(0 2px 6px rgba(194,24,88,0.2));
+  transition:transform 0.4s ease;
+}
+.ev-card:hover .ev-icon,.ev-card:active .ev-icon{
+  transform:scale(1.15) translateY(-2px);
+}
+
+/* Body adjustments */
+.ev-body{padding:0;text-align:center;}
 .ev-body h3{
   font-family:'Great Vibes',cursive;
-  font-size:1.9rem;color:#D6336C;margin-bottom:0.2rem;
+  font-size:2.2rem;color:#D6336C;
+  margin-bottom:0.3rem;
+  line-height:1.2;
 }
 .ev-body .ev-meta{
   font-family:'Cinzel',serif;font-size:0.65rem;
   letter-spacing:0.15em;color:#B8860B;
-  text-transform:uppercase;opacity:0.9;margin-bottom:0.5rem;
+  text-transform:uppercase;opacity:0.9;margin-bottom:0.6rem;
 }
 .ev-body .ev-theme{
   display:inline-block;
   background:rgba(212,175,55,0.2);
   border:1.5px solid rgba(233,30,99,0.4);
   color:#D6336C;font-size:0.75rem;
-  padding:0.15rem 0.7rem;border-radius:20px;
-  font-style:italic;
+  padding:0.2rem 0.8rem;border-radius:20px;
+  font-style:italic;margin-bottom:0.8rem;
 }
 .ev-body p{
-  font-size:0.88rem;line-height:1.6;
-  color:#5C4033;margin-top:0.7rem;
+  font-size:0.92rem;line-height:1.7;
+  color:#5C4033;margin-top:0;
 }
 
+/* Heart particles */
+.ev-hearts{
+  position:absolute;inset:0;
+  pointer-events:none;overflow:hidden;z-index:4;
+}
+.ev-heart{
+  position:absolute;font-size:0.85rem;
+  opacity:0;pointer-events:none;
+}
+.ev-card:hover .ev-heart,.ev-card:active .ev-heart{
+  animation:evHeartFloat 1.4s ease-out forwards;
+}
+@keyframes evHeartFloat{
+  0%{transform:translateY(0) scale(0.5) rotate(0deg);opacity:0.8}
+  100%{transform:translateY(-50px) scale(1.2) rotate(20deg);opacity:0}
+}
+
+/* Golden sparkle on entrance */
+.ev-sparkle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,#D4AF37,#fff);
+  opacity:0;pointer-events:none;z-index:5;
+}
+.ev-sparkle.active{
+  animation:evSparkleFly 1s ease-out forwards;
+}
+@keyframes evSparkleFly{
+  0%{transform:translate(0,0) scale(0);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
+}
+
+/* Responsive */
+@media(min-width:600px){
+  .events-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:0.5rem}
+  .ev-card:last-child:nth-child(odd){grid-column:1/-1;max-width:520px;margin:0 auto;}
+}
+@media(max-width:599px){
+  .events-grid{display:flex;flex-direction:column;gap:1.2rem;margin-top:0.5rem}
+  .ev-card{padding:1.6rem 1.4rem;}
+}
+
+/*─── FAMILY ─────────────────────────────────────────────*/
 /*─── FAMILY ─────────────────────────────────────────────*/
 .family-block{margin-bottom:1.5rem}
 .family-block h3{
@@ -1342,8 +1477,13 @@ footer{
 }
 </style>
 <base target="_blank">
+<script src="https://www.youtube.com/iframe_api"></script>
+<base target="_blank">
 </head>
 <body>
+
+<!-- Hidden YouTube Player -->
+<div id="yt-player" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;"></div>
 
 <!--─── BARONIAL ENVELOPE LOADING SCREEN ──────────────────-->
 <div id="envelope-loader">
@@ -1482,29 +1622,16 @@ footer{
   <div class="events-grid">
 
     <div class="ev-card reveal">
-      <div class="ev-illus" style="background:linear-gradient(135deg,#0d1a4a,#1e3a8a,#3b5fc0)">
-        <svg viewBox="0 0 300 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
-          <defs><radialGradient id="sg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#7aa0ff" stop-opacity="0.3"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs>
-          <ellipse cx="150" cy="140" rx="160" ry="40" fill="url(#sg1)"/>
-          <circle cx="150" cy="65" r="45" fill="none" stroke="rgba(180,200,255,0.2)" stroke-width="0.5"/>
-          <line x1="0" y1="20" x2="300" y2="20" stroke="rgba(255,240,150,0.4)" stroke-width="0.5" stroke-dasharray="3,10"/>
-          <circle cx="30" cy="20" r="3" fill="#fffaaa" opacity="0.9"/>
-          <circle cx="60" cy="20" r="2.5" fill="#fffaaa" opacity="0.8"/>
-          <circle cx="90" cy="20" r="3" fill="#fffaaa"/>
-          <circle cx="120" cy="20" r="2" fill="#fffaaa" opacity="0.7"/>
-          <circle cx="150" cy="20" r="3" fill="#fffaaa"/>
-          <circle cx="180" cy="20" r="2.5" fill="#fffaaa" opacity="0.8"/>
-          <circle cx="210" cy="20" r="3" fill="#fffaaa"/>
-          <circle cx="240" cy="20" r="2" fill="#fffaaa" opacity="0.7"/>
-          <circle cx="270" cy="20" r="3" fill="#fffaaa"/>
-          <rect x="112" y="80" width="22" height="60" rx="3" fill="#1e3a8a" opacity="0.9"/>
-          <circle cx="123" cy="68" r="13" fill="#d4a870"/>
-          <ellipse cx="177" cy="110" rx="26" ry="30" fill="#6b8dd6" opacity="0.9"/>
-          <circle cx="177" cy="72" r="13" fill="#d4a870"/>
-          <text x="150" y="152" text-anchor="middle" fill="rgba(200,220,255,0.8)" font-family="serif" font-size="9" font-style="italic">Sangeet Night</text>
-        </svg>
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:15%;top:75%;animation-delay:0s">💖</span>
+        <span class="ev-heart" style="left:70%;top:65%;animation-delay:0.2s">💕</span>
+        <span class="ev-heart" style="left:40%;top:80%;animation-delay:0.4s">❤️</span>
       </div>
       <div class="ev-body">
+        <span class="ev-icon">🎵</span>
         <h3>Sangeet Night</h3>
         <p class="ev-meta">📅 17 July 2026 &nbsp;·&nbsp; ⏰ 7:00 PM</p>
         <span class="ev-theme">Royal Blue & Silver</span>
@@ -1513,23 +1640,16 @@ footer{
     </div>
 
     <div class="ev-card reveal">
-      <div class="ev-illus" style="background:linear-gradient(135deg,#7c4800,#c47a00,#e8a820)">
-        <svg viewBox="0 0 300 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
-          <circle cx="30" cy="30" r="20" fill="#ff8c00" opacity="0.4"/>
-          <circle cx="270" cy="35" r="16" fill="#ff6600" opacity="0.4"/>
-          <circle cx="50" cy="130" r="14" fill="#ffaa00" opacity="0.4"/>
-          <circle cx="250" cy="125" r="18" fill="#ff8c00" opacity="0.3"/>
-          <circle cx="150" cy="15" r="10" fill="#ffcc00" opacity="0.5"/>
-          <ellipse cx="120" cy="100" rx="26" ry="50" fill="#fff8e0" opacity="0.9"/>
-          <circle cx="120" cy="52" r="14" fill="#e0a870"/>
-          <ellipse cx="180" cy="100" rx="22" ry="50" fill="#ffe0a0" opacity="0.9"/>
-          <circle cx="180" cy="54" r="13" fill="#d4946a"/>
-          <ellipse cx="150" cy="138" rx="18" ry="8" fill="#d4860a" opacity="0.7"/>
-          <ellipse cx="150" cy="136" rx="18" ry="7" fill="#f5c518" opacity="0.8"/>
-          <text x="150" y="155" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="serif" font-size="9" font-style="italic">Haldi Ceremony</text>
-        </svg>
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:20%;top:70%;animation-delay:0s">🌼</span>
+        <span class="ev-heart" style="left:75%;top:60%;animation-delay:0.15s">💛</span>
+        <span class="ev-heart" style="left:50%;top:78%;animation-delay:0.3s">✨</span>
       </div>
       <div class="ev-body">
+        <span class="ev-icon">🌼</span>
         <h3>Haldi Ceremony</h3>
         <p class="ev-meta">📅 18 July 2026 &nbsp;·&nbsp; ⏰ 10:00 AM</p>
         <span class="ev-theme">Yellow & Floral</span>
@@ -1538,21 +1658,16 @@ footer{
     </div>
 
     <div class="ev-card reveal">
-      <div class="ev-illus" style="background:linear-gradient(135deg,#1a4a2a,#2d7a4a,#4aab6a)">
-        <svg viewBox="0 0 300 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
-          <circle cx="30" cy="30" r="22" fill="#ff9eb5" opacity="0.35"/>
-          <circle cx="270" cy="28" r="18" fill="#ff9eb5" opacity="0.3"/>
-          <circle cx="150" cy="145" r="22" fill="#ffb8cc" opacity="0.25"/>
-          <ellipse cx="150" cy="100" rx="30" ry="52" fill="#fffdf8" opacity="0.88"/>
-          <circle cx="150" cy="50" r="16" fill="#e0a870"/>
-          <ellipse cx="150" cy="126" rx="22" ry="10" fill="#b8650a" opacity="0.65"/>
-          <path d="M130 126 Q150 118 170 126" stroke="rgba(90,50,5,0.8)" stroke-width="1.5" fill="none"/>
-          <text x="60" y="90" fill="rgba(255,180,200,0.7)" font-size="20" font-family="serif">✿</text>
-          <text x="215" y="85" fill="rgba(255,180,200,0.7)" font-size="18" font-family="serif">✿</text>
-          <text x="150" y="155" text-anchor="middle" fill="rgba(200,255,220,0.85)" font-family="serif" font-size="9" font-style="italic">Mehendi Ceremony</text>
-        </svg>
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:18%;top:72%;animation-delay:0s">🌿</span>
+        <span class="ev-heart" style="left:72%;top:68%;animation-delay:0.2s">💚</span>
+        <span class="ev-heart" style="left:45%;top:82%;animation-delay:0.4s">🌸</span>
       </div>
       <div class="ev-body">
+        <span class="ev-icon">🌿</span>
         <h3>Mehendi Ceremony</h3>
         <p class="ev-meta">📅 18 July 2026 &nbsp;·&nbsp; ⏰ 6:00 PM</p>
         <span class="ev-theme">Green & Pink</span>
@@ -1561,23 +1676,16 @@ footer{
     </div>
 
     <div class="ev-card reveal">
-      <div class="ev-illus" style="background:linear-gradient(135deg,#5c0000,#8b0000,#c41230)">
-        <svg viewBox="0 0 300 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
-          <line x1="40" y1="10" x2="40" y2="150" stroke="#d4af37" stroke-width="10" opacity="0.8"/>
-          <line x1="260" y1="10" x2="260" y2="150" stroke="#d4af37" stroke-width="10" opacity="0.8"/>
-          <polygon points="20,20 150,2 280,20" fill="#d4af37" opacity="0.85"/>
-          <polygon points="30,20 150,7 270,20" fill="#c41230" opacity="0.8"/>
-          <ellipse cx="150" cy="22" rx="80" ry="20" fill="none" stroke="#ff9999" stroke-width="2" opacity="0.5"/>
-          <rect x="108" y="88" width="22" height="62" rx="2" fill="#6b0000" opacity="0.95"/>
-          <circle cx="119" cy="78" r="12" fill="#d4a870"/>
-          <rect x="113" y="72" width="12" height="10" rx="2" fill="#d4af37" opacity="0.8"/>
-          <ellipse cx="181" cy="120" rx="22" ry="34" fill="#c41230" opacity="0.9"/>
-          <circle cx="181" cy="80" r="12" fill="#d4a870"/>
-          <ellipse cx="150" cy="148" rx="12" ry="5" fill="#d4af37" opacity="0.55"/>
-          <text x="150" y="158" text-anchor="middle" fill="rgba(255,200,200,0.8)" font-family="serif" font-size="8" font-style="italic">Wedding Ceremony</text>
-        </svg>
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:12%;top:70%;animation-delay:0s">💍</span>
+        <span class="ev-heart" style="left:78%;top:62%;animation-delay:0.18s">❤️</span>
+        <span class="ev-heart" style="left:48%;top:80%;animation-delay:0.35s">✨</span>
       </div>
       <div class="ev-body">
+        <span class="ev-icon">💍</span>
         <h3>Wedding Ceremony</h3>
         <p class="ev-meta">📅 19 July 2026 &nbsp;·&nbsp; ⏰ 11:00 AM</p>
         <span class="ev-theme">Traditional Red & Gold</span>
@@ -1586,26 +1694,16 @@ footer{
     </div>
 
     <div class="ev-card reveal" style="grid-column:1/-1">
-      <div class="ev-illus" style="background:linear-gradient(135deg,#2a1a00,#5c3800,#d4af37)">
-        <svg viewBox="0 0 300 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
-          <ellipse cx="150" cy="18" rx="48" ry="11" fill="#d4af37" opacity="0.7"/>
-          <line x1="150" y1="29" x2="150" y2="52" stroke="#d4af37" stroke-width="1.5"/>
-          <ellipse cx="150" cy="57" rx="28" ry="7" fill="#d4af37" opacity="0.75"/>
-          <circle cx="132" cy="66" r="4" fill="#fffaaa" opacity="0.9"/>
-          <circle cx="150" cy="66" r="5" fill="#fffaaa"/>
-          <circle cx="168" cy="66" r="4" fill="#fffaaa" opacity="0.9"/>
-          <rect x="103" y="90" width="26" height="65" rx="3" fill="#1a0d00" opacity="0.95"/>
-          <circle cx="116" cy="80" r="13" fill="#d4a870"/>
-          <rect x="113" y="90" width="6" height="28" fill="#d4af37" opacity="0.55"/>
-          <ellipse cx="184" cy="122" rx="28" ry="38" fill="#d4af37" opacity="0.65"/>
-          <ellipse cx="184" cy="95" rx="17" ry="26" fill="#fff8e8" opacity="0.9"/>
-          <circle cx="184" cy="82" r="13" fill="#d4a870"/>
-          <text x="40" y="48" fill="rgba(255,220,100,0.6)" font-size="12" font-family="serif">✦</text>
-          <text x="248" y="52" fill="rgba(255,220,100,0.6)" font-size="11" font-family="serif">✦</text>
-          <text x="150" y="158" text-anchor="middle" fill="rgba(255,240,180,0.85)" font-family="serif" font-size="9" font-style="italic">Wedding Reception</text>
-        </svg>
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:15%;top:72%;animation-delay:0s">🌹</span>
+        <span class="ev-heart" style="left:70%;top:65%;animation-delay:0.15s">🥂</span>
+        <span class="ev-heart" style="left:42%;top:80%;animation-delay:0.3s">💖</span>
       </div>
       <div class="ev-body">
+        <span class="ev-icon">🌹</span>
         <h3>Reception</h3>
         <p class="ev-meta">📅 20 July 2026 &nbsp;·&nbsp; ⏰ 7:00 PM</p>
         <span class="ev-theme">Champagne Gold</span>
@@ -1616,6 +1714,9 @@ footer{
   </div>
 </section>
 
+<!--════════════════════════════════════════════════════════
+    FAMILY
+════════════════════════════════════════════════════════-->
 <!--════════════════════════════════════════════════════════
     FAMILY
 ════════════════════════════════════════════════════════-->
@@ -1765,6 +1866,8 @@ footer{
 </footer>
 
 <script>
+window.dpEnvelopeOpened = false;
+document.addEventListener("DOMContentLoaded", initMusic);
 /* ════════════════════════════════════════════════════════
    UTILITIES
 ════════════════════════════════════════════════════════ */
@@ -1801,6 +1904,12 @@ function fmt2(n){return String(n).padStart(2,'0')}
   function openEnvelope(){
     if(opened)return;
     opened=true;
+    window.dpEnvelopeOpened = true;
+
+    // Start YouTube music in same user gesture
+    if(ytReady && ytPlayer && ytPlayer.playVideo){
+      ytPlayer.playVideo();
+    }
 
     // Break seal with sparkles
     createSparkles();
@@ -1825,8 +1934,7 @@ function fmt2(n){return String(n).padStart(2,'0')}
         // Trigger existing page load logic
         initPageAfterLoad();
         // Auto-start romantic music after user interaction
-        startMusicAuto();
-      },1500);
+        },1500);
     },3200);
   }
 
@@ -1844,10 +1952,10 @@ function initPageAfterLoad(){
   initPetals();
   initScrollReveal();
   initBtt();
-  initMusic();
   initConfetti();
   initScratchCard();
   initRsvp();
+  initEventCards();
 
   // Check if already revealed from localStorage
   setTimeout(()=>{
@@ -2036,37 +2144,60 @@ function initBtt(){
 }
 
 /* ════════════════════════════════════════════════════════
-   MUSIC (HTML5 Audio) — Fixed play-state sync
+   MUSIC (YouTube iframe API)
 ════════════════════════════════════════════════════════ */
-let audioPlayer=null, isPlaying=false;
+let ytPlayer = null;
+let ytReady = false;
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('yt-player', {
+    height: '1',
+    width: '1',
+    videoId: '17aqk4WUhIA',
+    playerVars: {
+      autoplay: 0,
+      loop: 1,
+      playlist: '17aqk4WUhIA',
+      controls: 0,
+      showinfo: 0,
+      rel: 0,
+      modestbranding: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      playsinline: 1
+    },
+    events: {
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerReady(event) {
+  ytReady = true;
+  event.target.setVolume(50);
+  updateMusicUI();
+  // If envelope was opened before player was ready, start music now
+  if(window.dpEnvelopeOpened){
+    event.target.playVideo();
+  }
+}
+
+function onPlayerStateChange(event) {
+  updateMusicUI();
+}
+
 function initMusic(){
   const musicBtn=document.getElementById('music-btn');
   const musicIcon=document.getElementById('music-icon');
 
-  audioPlayer=new Audio();
-  audioPlayer.src='https://cdn.pixabay.com/download/audio/2022/03/24/audio_5e2f6d6f4c.mp3?filename=soft-piano-100-bpm-121529.mp3';
-  audioPlayer.loop=true;
-  audioPlayer.volume=0.4;
-
-  // Sync UI to real audio state
-  audioPlayer.addEventListener('play', ()=>{ isPlaying=true; updateMusicUI(); });
-  audioPlayer.addEventListener('pause', ()=>{ isPlaying=false; updateMusicUI(); });
-  audioPlayer.addEventListener('ended', ()=>{ isPlaying=false; updateMusicUI(); });
-
   musicBtn.addEventListener('click',()=>{
-    if(!audioPlayer)return;
-    if(audioPlayer.paused){
-      audioPlayer.play().then(()=>{
-        isPlaying=true;
-        updateMusicUI();
-      }).catch(()=>{
-        isPlaying=false;
-        updateMusicUI();
-      });
+    if(!ytReady || !ytPlayer || !ytPlayer.playVideo) return;
+    const state = ytPlayer.getPlayerState();
+    if(state === YT.PlayerState.PLAYING){
+      ytPlayer.pauseVideo();
     } else {
-      audioPlayer.pause();
-      isPlaying=false;
-      updateMusicUI();
+      ytPlayer.playVideo();
     }
   });
 }
@@ -2075,28 +2206,24 @@ function updateMusicUI(){
   const musicBtn=document.getElementById('music-btn');
   const musicIcon=document.getElementById('music-icon');
   if(!musicBtn || !musicIcon) return;
-  const actuallyPlaying = audioPlayer && !audioPlayer.paused;
-  if(actuallyPlaying){
+  if(!ytReady || !ytPlayer) {
+    musicBtn.classList.remove('playing');
+    musicIcon.textContent='🎵';
+    return;
+  }
+  const state = ytPlayer.getPlayerState();
+  if(state === YT.PlayerState.PLAYING){
     musicBtn.classList.add('playing');
     musicIcon.textContent='🎶';
   } else {
     musicBtn.classList.remove('playing');
     musicIcon.textContent='🎵';
-    isPlaying=false;
   }
 }
 
-function startMusicAuto(){
-  if(!audioPlayer || isPlaying) return;
-  audioPlayer.play().then(()=>{
-    isPlaying=true;
-    updateMusicUI();
-  }).catch(()=>{
-    isPlaying=false;
-    updateMusicUI();
-  });
-}
-
+/* ════════════════════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════════════════════ */
 /* ════════════════════════════════════════════════════════
    CONFETTI
 ════════════════════════════════════════════════════════ */
@@ -2284,6 +2411,32 @@ function startCountdown(){
 }
 
 /* ════════════════════════════════════════════════════════
+   EVENT CARDS ENTRANCE & INTERACTION
+════════════════════════════════════════════════════════ */
+function initEventCards(){
+  const cards=document.querySelectorAll('.ev-card');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const card=e.target;
+        // Golden sparkle burst on entrance
+        for(let i=0;i<10;i++){
+          const sp=document.createElement('div');
+          sp.className='ev-sparkle';
+          const size=2+Math.random()*4;
+          sp.style.cssText=`width:${size}px;height:${size}px;left:${15+Math.random()*70}%;top:${20+Math.random()*60}%;--tx:${(Math.random()-0.5)*100}px;--ty:${-30-Math.random()*80}px;`;
+          card.appendChild(sp);
+          requestAnimationFrame(()=>sp.classList.add('active'));
+          setTimeout(()=>{if(sp.parentNode)sp.remove();},1000);
+        }
+        obs.unobserve(card);
+      }
+    });
+  },{threshold:0.25});
+  cards.forEach(c=>obs.observe(c));
+}
+
+/* ════════════════════════════════════════════════════════
    RSVP
 ════════════════════════════════════════════════════════ */
 function initRsvp(){
@@ -2317,6 +2470,11 @@ function initRsvp(){
     this.style.display='none';
     document.getElementById('rsvp-ok').style.display='block';
   });
+}
+
+// Fallback: if YT API already loaded before this script executed
+if(window.YT && window.YT.Player && !ytPlayer){
+  onYouTubeIframeAPIReady();
 }
 </script>
 
