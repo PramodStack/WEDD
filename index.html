@@ -2747,9 +2747,325 @@ footer{
   background:rgba(233,30,99,0.18);
   transform:translateY(-2px);
 }
+
+/*─── GALLERY SECTION ─────────────────────────────────────*/
+.gallery-section{
+  position:relative;z-index:10;
+  padding:4rem 1.2rem 4.5rem;
+  max-width:520px;margin:0 auto;
+  overflow:hidden;
+}
+@media(min-width:768px){
+  .gallery-section{max-width:860px;padding:5rem 2rem 5.5rem}
+}
+
+.gallery-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 20%,rgba(255,228,236,0.9) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 80%,rgba(248,200,220,0.5) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%,rgba(248,200,220,0.5) 0%,transparent 60%),
+    linear-gradient(180deg,#FFF0F5 0%,#FDE8F0 30%,#FFF5F8 60%,#FFF0F5 100%);
+  z-index:0;pointer-events:none;
+}
+.gallery-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 10% 20%,rgba(212,175,55,0.06) 0%,transparent 25%),
+    radial-gradient(circle at 90% 30%,rgba(212,175,55,0.06) 0%,transparent 25%),
+    radial-gradient(circle at 50% 90%,rgba(212,175,55,0.05) 0%,transparent 30%);
+  pointer-events:none;
+}
+
+/* Floating petals */
+.gallery-float-petals{
+  position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+.gallery-float-petal{
+  position:absolute;
+  border-radius:50% 10% 50% 10%;
+  opacity:0;
+  animation:galleryPetalDrift linear infinite;
+  filter:drop-shadow(0 2px 4px rgba(194,24,88,0.12));
+}
+@keyframes galleryPetalDrift{
+  0%{transform:translateY(20px) rotate(0deg) translateX(0);opacity:0}
+  8%{opacity:0.5}
+  92%{opacity:0.25}
+  100%{transform:translateY(-120vh) rotate(720deg) translateX(60px);opacity:0}
+}
+
+/* Sparkles */
+.gallery-sparkles{
+  position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+.gallery-spk{
+  position:absolute;width:3px;height:3px;
+  background:radial-gradient(circle,#D4AF37,#fff);
+  border-radius:50%;
+  opacity:0;
+  box-shadow:0 0 6px rgba(212,175,55,0.5);
+  animation:gallerySpkTwinkle 3s ease-in-out infinite;
+}
+@keyframes gallerySpkTwinkle{
+  0%,100%{opacity:0;transform:scale(0.5)}
+  50%{opacity:0.8;transform:scale(1.2)}
+}
+
+/* Blurred floral decorations */
+.gallery-floral-bg{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  overflow:hidden;
+}
+.gallery-floral-deco{
+  position:absolute;font-size:3.5rem;
+  opacity:0.08;
+  filter:blur(2px) drop-shadow(0 2px 4px rgba(194,24,88,0.15));
+  animation:galleryFloralFloat 8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes galleryFloralFloat{
+  0%,100%{transform:translateY(0) rotate(var(--fr,0deg));opacity:0.06}
+  50%{transform:translateY(-10px) rotate(calc(var(--fr,0deg) + 5deg));opacity:0.12}
+}
+
+/* Quote under heading */
+.gallery-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(0.9rem,3vw,1.15rem);
+  color:#8B6914;
+  letter-spacing:0.02em;
+  opacity:0.9;
+  text-align:center;
+  margin-top:0.6rem;
+  position:relative;z-index:2;
+}
+
+/* Gallery card wrap */
+.gallery-card-wrap{
+  position:relative;z-index:2;
+  display:flex;justify-content:center;
+  margin-top:2rem;
+}
+
+/* Premium glass card */
+.gallery-card{
+  position:relative;
+  width:100%;max-width:420px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.6),rgba(255,240,248,0.55),rgba(255,228,236,0.5));
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:2px solid rgba(212,175,55,0.55);
+  border-radius:22px;
+  padding:2.8rem 2rem 2.4rem;
+  box-shadow:
+    0 8px 40px rgba(194,24,88,0.12),
+    0 0 60px rgba(248,200,220,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  text-align:center;
+  overflow:hidden;
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94),
+             box-shadow 0.5s ease,
+             border-color 0.4s ease;
+}
+.gallery-card:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:
+    0 20px 60px rgba(214,51,108,0.15),
+    0 0 50px rgba(248,200,220,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+  border-color:rgba(212,175,55,0.8);
+}
+
+/* Glass reflection on hover */
+.gallery-card::before{
+  content:'';position:absolute;inset:0;border-radius:22px;
+  background:linear-gradient(135deg,rgba(248,200,220,0.2),transparent 60%),
+             linear-gradient(225deg,rgba(212,175,55,0.08),transparent 50%);
+  pointer-events:none;z-index:0;
+}
+.gallery-card::after{
+  content:'';position:absolute;
+  top:-50%;left:-60%;width:40%;height:200%;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,0.25),transparent);
+  transform:skewX(-20deg);
+  opacity:0;
+  transition:opacity 0.3s;
+  pointer-events:none;z-index:3;
+}
+.gallery-card:hover::after{
+  opacity:1;
+  animation:galleryCardShine 0.9s ease forwards;
+}
+@keyframes galleryCardShine{
+  from{left:-60%}to{left:120%}
+}
+
+/* Corner brackets */
+.gallery-card-corner-tl,.gallery-card-corner-br{
+  position:absolute;width:50px;height:50px;
+  pointer-events:none;z-index:2;
+  transition:all 0.4s ease;
+}
+.gallery-card-corner-tl{
+  top:10px;left:10px;
+  border-top:2px solid rgba(212,175,55,0.6);
+  border-left:2px solid rgba(212,175,55,0.6);
+  border-radius:16px 0 0 0;
+}
+.gallery-card-corner-br{
+  bottom:10px;right:10px;
+  border-bottom:2px solid rgba(212,175,55,0.6);
+  border-right:2px solid rgba(212,175,55,0.6);
+  border-radius:0 0 16px 0;
+}
+.gallery-card:hover .gallery-card-corner-tl,
+.gallery-card:hover .gallery-card-corner-br{
+  width:58px;height:58px;
+  border-color:rgba(212,175,55,0.9);
+}
+
+/* Card content */
+.gallery-icon{
+  font-size:3.2rem;
+  display:block;
+  margin-bottom:0.8rem;
+  filter:drop-shadow(0 2px 8px rgba(194,24,88,0.2));
+  animation:galleryIconFloat 4s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+@keyframes galleryIconFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.gallery-card-title{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(1.8rem,6vw,2.4rem);
+  color:#D6336C;
+  margin-bottom:0.6rem;
+  line-height:1.2;
+  position:relative;z-index:1;
+  text-shadow:0 0 15px rgba(233,30,99,0.2);
+}
+
+.gallery-card-msg{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(0.95rem,3.2vw,1.15rem);
+  color:#5C4033;
+  line-height:1.7;
+  margin-bottom:1.6rem;
+  position:relative;z-index:1;
+}
+
+/* Premium button */
+.gallery-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  gap:0.4rem;
+  padding:0.9rem 2.2rem;
+  background:linear-gradient(135deg,#E91E63,#C2185B,#9D174D);
+  background-size:200% 200%;
+  color:#fff;
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.65rem,2.5vw,0.8rem);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  font-weight:600;
+  text-decoration:none;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  box-shadow:
+    0 6px 24px rgba(194,24,88,0.3),
+    0 0 0 1px rgba(212,175,55,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  text-shadow:0 1px 2px rgba(0,0,0,0.2);
+  overflow:hidden;
+  z-index:1;
+  animation:galleryBtnPulse 3s ease-in-out infinite;
+}
+@keyframes galleryBtnPulse{
+  0%,100%{box-shadow:0 6px 24px rgba(194,24,88,0.3),0 0 0 1px rgba(212,175,55,0.4),0 0 15px rgba(233,30,99,0.15),inset 0 1px 0 rgba(255,255,255,0.25)}
+  50%{box-shadow:0 8px 30px rgba(194,24,88,0.4),0 0 0 1px rgba(212,175,55,0.6),0 0 25px rgba(233,30,99,0.3),inset 0 1px 0 rgba(255,255,255,0.3)}
+}
+
+/* Button shine sweep */
+.gallery-btn::before{
+  content:'';position:absolute;
+  top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  transition:left 0.7s ease;
+  pointer-events:none;z-index:2;
+}
+.gallery-btn:hover::before,
+.gallery-btn:active::before{
+  left:100%;
+}
+
+/* Button golden border ring on hover */
+.gallery-btn::after{
+  content:'';position:absolute;inset:-3px;
+  border-radius:50px;
+  border:2px dashed rgba(212,175,55,0.6);
+  opacity:0;
+  transition:all 0.4s ease;
+  pointer-events:none;z-index:-1;
+  animation:galleryBtnRingRotate 15s linear infinite;
+}
+@keyframes galleryBtnRingRotate{to{transform:rotate(360deg)}}
+.gallery-btn:hover::after,
+.gallery-btn:active::after{
+  opacity:1;
+}
+
+.gallery-btn:hover,
+.gallery-btn:active{
+  transform:translateY(-4px) scale(1.05);
+  box-shadow:
+    0 12px 35px rgba(194,24,88,0.4),
+    0 0 20px rgba(212,175,55,0.25),
+    0 0 0 1px rgba(212,175,55,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  animation-play-state:paused;
+}
+
+.gallery-btn:active{
+  transform:translateY(-1px) scale(0.98);
+}
+
+/* Button heart particles container */
+.gallery-btn-hearts{
+  position:absolute;inset:-30px;
+  pointer-events:none;z-index:10;
+  overflow:visible;
+}
+
+/* Entrance animation */
+.gallery-card-wrap.reveal.vis .gallery-card{
+  animation:galleryCardEntrance 0.9s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+}
+@keyframes galleryCardEntrance{
+  0%{opacity:0;transform:translateY(40px) scale(0.92)}
+  60%{opacity:1;transform:translateY(-4px) scale(1.02)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Responsive */
+@media(max-width:480px){
+  .gallery-card{padding:2.2rem 1.4rem 2rem}
+  .gallery-btn{padding:0.8rem 1.8rem}
+}
+
 </style>
 <base target="_blank">
 <script src="https://www.youtube.com/iframe_api"></script>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -2789,7 +3105,7 @@ footer{
           <span class="cname" style="background:linear-gradient(135deg,#C2185B,#E91E63,#C2185B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Priyanka</span>
         </div>
         <div class="card-line"></div>
-        <div class="card-date">19 July 2026</div>
+        <div class="card-date">21 June 2026</div>
         <div class="card-sub">Wedding Celebration</div>
         <div class="card-footer">With Love & Blessings</div>
       </div>
@@ -2892,7 +3208,7 @@ footer{
 <div id="scratch-section">
   <div class="scratch-wrap" id="scratch-wrap">
     <div class="scratch-reveal-layer" id="reveal-layer">
-      <div class="scratch-date-text" id="date-text">19 July 2026</div>
+      <div class="scratch-date-text" id="date-text">21 June 2026</div>
       <div class="scratch-date-sub" id="date-sub">Our Wedding Day ❤️</div>
     </div>
     <canvas id="scratch-canvas"></canvas>
@@ -2911,7 +3227,7 @@ footer{
   <div class="sec-title reveal">
     <div class="gold-divider"><span>✦</span></div>
     <h2>Our Big Day</h2>
-    <p class="sub">19 · July · 2026</p>
+    <p class="sub">21 · June · 2026</p>
   </div>
   <div class="cd-grid reveal">
     <div class="cd-card"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
@@ -2940,7 +3256,7 @@ footer{
   </div>
   <div class="events-grid">
 
-    <div class="ev-card reveal" data-event-start="2026-07-17T19:00:00+05:30" data-event-end="2026-07-17T23:00:00+05:30">
+    <div class="ev-card reveal" data-event-start="2026-06-20T18:00:00+05:30" data-event-end="2026-06-20T23:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -2953,32 +3269,15 @@ footer{
       <div class="ev-body">
         <span class="ev-icon">🎵</span>
         <h3>Sangeet Night</h3>
-        <p class="ev-meta">📅 17 July 2026 &nbsp;·&nbsp; ⏰ 7:00 PM</p>
+        <p class="ev-meta">📅 20 June 2026 &nbsp;·&nbsp; ⏰ 6:00 PM</p>
         <span class="ev-theme">Royal Blue & Silver</span>
         <p>Music, dance, and joy as both families come together under fairy lights to celebrate with song and laughter.</p>
       </div>
     </div>
 
-    <div class="ev-card reveal" data-event-start="2026-07-18T10:00:00+05:30" data-event-end="2026-07-18T13:00:00+05:30">
-      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
-      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
-      <div class="ev-shine"></div>
-      <div class="ev-hearts">
-        <span class="ev-heart" style="left:20%;top:70%;animation-delay:0s">🌼</span>
-        <span class="ev-heart" style="left:75%;top:60%;animation-delay:0.15s">💛</span>
-        <span class="ev-heart" style="left:50%;top:78%;animation-delay:0.3s">✨</span>
-      </div>
-      <div class="ev-status upcoming" id="status-haldi"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
-      <div class="ev-body">
-        <span class="ev-icon">🌼</span>
-        <h3>Haldi Ceremony</h3>
-        <p class="ev-meta">📅 18 July 2026 &nbsp;·&nbsp; ⏰ 10:00 AM</p>
-        <span class="ev-theme">Yellow & Floral</span>
-        <p>A vibrant morning ritual of turmeric and blessings, surrounded by marigold flowers and the laughter of loved ones.</p>
-      </div>
-    </div>
+    
 
-    <div class="ev-card reveal" data-event-start="2026-07-18T18:00:00+05:30" data-event-end="2026-07-18T22:00:00+05:30">
+    <div class="ev-card reveal" data-event-start="2026-06-20T18:30:00+05:30" data-event-end="2026-06-20T22:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -2991,13 +3290,32 @@ footer{
       <div class="ev-body">
         <span class="ev-icon">🌿</span>
         <h3>Mehendi Ceremony</h3>
-        <p class="ev-meta">📅 18 July 2026 &nbsp;·&nbsp; ⏰ 6:00 PM</p>
+        <p class="ev-meta">📅 20 June 2026 &nbsp;·&nbsp; ⏰ 6:30 PM</p>
         <span class="ev-theme">Green & Pink</span>
         <p>An intimate evening of intricate henna artistry, filled with fragrant flowers and heartfelt stories.</p>
       </div>
     </div>
 
-    <div class="ev-card reveal" data-event-start="2026-07-19T11:00:00+05:30" data-event-end="2026-07-19T15:00:00+05:30">
+    <div class="ev-card reveal" data-event-start="2026-06-21T10:00:00+05:30" data-event-end="2026-06-21T13:00:00+05:30">
+      <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
+      <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
+      <div class="ev-shine"></div>
+      <div class="ev-hearts">
+        <span class="ev-heart" style="left:20%;top:70%;animation-delay:0s">🌼</span>
+        <span class="ev-heart" style="left:75%;top:60%;animation-delay:0.15s">💛</span>
+        <span class="ev-heart" style="left:50%;top:78%;animation-delay:0.3s">✨</span>
+      </div>
+      <div class="ev-status upcoming" id="status-haldi"><span class="ev-status-dot"></span><span class="ev-status-text">Upcoming</span></div>
+      <div class="ev-body">
+        <span class="ev-icon">🌼</span>
+        <h3>Haldi Ceremony</h3>
+        <p class="ev-meta">📅 21 June 2026 &nbsp;·&nbsp; ⏰ 10:00 AM</p>
+        <span class="ev-theme">Yellow & Floral</span>
+        <p>A vibrant morning ritual of turmeric and blessings, surrounded by marigold flowers and the laughter of loved ones.</p>
+      </div>
+    </div>
+
+    <div class="ev-card reveal" data-event-start="2026-06-21T22:00:00+05:30" data-event-end="2026-06-21T24:00:00+05:30">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -3010,13 +3328,13 @@ footer{
       <div class="ev-body">
         <span class="ev-icon">💍</span>
         <h3>Wedding Ceremony</h3>
-        <p class="ev-meta">📅 19 July 2026 &nbsp;·&nbsp; ⏰ 11:00 AM</p>
+        <p class="ev-meta">📅 21 June 2026 &nbsp;·&nbsp; ⏰ 10:00 PM</p>
         <span class="ev-theme">Traditional Red & Gold</span>
         <p>The sacred union under a flower-adorned mandap, where two souls take seven vows and begin their eternal journey.</p>
       </div>
     </div>
 
-    <div class="ev-card reveal" data-event-start="2026-07-20T19:00:00+05:30" data-event-end="2026-07-20T23:00:00+05:30" style="grid-column:1/-1">
+    <div class="ev-card reveal" data-event-start="2026-06-24T19:00:00+05:30" data-event-end="2026-06-24T23:00:00+05:30" style="grid-column:1/-1">
       <div class="ev-corner-tl"></div><div class="ev-corner-tr"></div>
       <div class="ev-corner-bl"></div><div class="ev-corner-br"></div>
       <div class="ev-shine"></div>
@@ -3029,7 +3347,7 @@ footer{
       <div class="ev-body">
         <span class="ev-icon">🌹</span>
         <h3>Reception</h3>
-        <p class="ev-meta">📅 20 July 2026 &nbsp;·&nbsp; ⏰ 7:00 PM</p>
+        <p class="ev-meta">📅 24 June 2026 &nbsp;·&nbsp; ⏰ 7:00 PM</p>
         <span class="ev-theme">Champagne Gold</span>
         <p>An elegant evening of celebration, fine dining, and dancing beneath a canopy of golden lights as we welcome you into our new chapter.</p>
       </div>
@@ -3054,21 +3372,19 @@ footer{
     <div>
       <h3>Groom's Family</h3>
       <div class="fam-members">
-        <div class="fam-mem"><div class="fam-av">👨</div><div class="fam-info"><div class="nm">Mr. Amit Kumar</div><div class="rl">Father of the Groom</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👩</div><div class="fam-info"><div class="nm">Mrs. Neha Kumar</div><div class="rl">Mother of the Groom</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👴</div><div class="fam-info"><div class="nm">Shri Ramesh Kumar</div><div class="rl">Grandfather</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👵</div><div class="fam-info"><div class="nm">Smt. Sushila Kumar</div><div class="rl">Grandmother</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👧</div><div class="fam-info"><div class="nm">Ananya Kumar</div><div class="rl">Sister</div></div></div>
+        <div class="fam-mem"><div class="fam-av">🤵‍♂️</div><div class="fam-info"><div class="nm">Mr. Debasish Ghadei</div><div class="rl">The Groom</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👩</div><div class="fam-info"><div class="nm">Mrs. Shantilata Ghadei</div><div class="rl">Mother of the Groom</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👨</div><div class="fam-info"><div class="nm">Mr. Sanatana Ghadei</div><div class="rl">Father of the Groom</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👧</div><div class="fam-info"><div class="nm">Monalisha Ghadei</div><div class="rl">Sister</div></div></div>
       </div>
     </div>
     <div>
       <h3>Bride's Family</h3>
       <div class="fam-members">
-        <div class="fam-mem"><div class="fam-av">👨</div><div class="fam-info"><div class="nm">Mr. Rajesh Sharma</div><div class="rl">Father of the Bride</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👩</div><div class="fam-info"><div class="nm">Mrs. Sunita Sharma</div><div class="rl">Mother of the Bride</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👴</div><div class="fam-info"><div class="nm">Shri Mahesh Sharma</div><div class="rl">Grandfather</div></div></div>
-        <div class="fam-mem"><div class="fam-av">👵</div><div class="fam-info"><div class="nm">Smt. Lata Sharma</div><div class="rl">Grandmother</div></div></div>
-        <div class="fam-mem"><div class="fam-av">🧑</div><div class="fam-info"><div class="nm">Kunal Sharma</div><div class="rl">Brother</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👰</div><div class="fam-info"><div class="nm">Mrs. Priyanka Patra</div><div class="rl">The Bride</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👩</div><div class="fam-info"><div class="nm">Mrs. Snigdharani Patra</div><div class="rl">Mother of the Bride</div></div></div>
+        <div class="fam-mem"><div class="fam-av">👨</div><div class="fam-info"><div class="nm">Mr. Kamalakanta Patra</div><div class="rl">Father of the Bride</div></div></div>
+        <div class="fam-mem"><div class="fam-av">🧑</div><div class="fam-info"><div class="nm">Pritam Patra</div><div class="rl">Brother</div></div></div>
       </div>
     </div>
   </div>
@@ -3136,8 +3452,8 @@ footer{
           <span class="vis-hp" style="--px:-15px;--py:25px;bottom:20%;left:15%;animation-delay:0.2s">💮</span>
         </div>
       </div>
-      <div class="vis-name">Mr. Prabhakar Ghadei</div>
-      <span class="vis-partner">&amp; Mrs. Santilata Ghadei</span>
+      <div class="vis-name">Mr. Prabhakara Ghadei</div>
+      <span class="vis-partner">&amp; Mrs. Shantilata Ghadei</span>
       <button class="vis-btn" onclick="this.style.transform='scale(0.95)';setTimeout(()=>this.style.transform='',150)">
         GHADEI FAMILY <span class="namaste-glow">&#128591;</span>
       </button>
@@ -3391,11 +3707,11 @@ footer{
           <label for="rev">Event</label>
           <select id="rev">
             <option value="">All Events</option>
-            <option>Sangeet Night (17 July)</option>
-            <option>Haldi Ceremony (18 July)</option>
-            <option>Mehendi Ceremony (18 July)</option>
-            <option>Wedding Ceremony (19 July)</option>
-            <option>Reception (20 July)</option>
+            <option>Sangeet Night (20 June)</option>
+            <option>Haldi Ceremony (21 June)</option>
+            <option>Mehendi Ceremony (20 June)</option>
+            <option>Wedding Ceremony (21 June)</option>
+            <option>Reception (24 June)</option>
           </select>
         </div>
         <div class="f-group">
@@ -3428,13 +3744,50 @@ footer{
   <div class="glass-card venue-card reveal">
     <h3>Venue Details</h3>
     <p class="vn">Debashis &amp; Priyanka Wedding Venue</p>
-    <p>📍 Palace Grounds, Grand Banquet Hall<br/>Odia Cultural Complex, NH-16 Bypass Road<br/>Bhubaneswar, Odisha – 751001</p>
+    <p>📍 Ghadei Residence<br/>Kodabaruan, Near Khetrapal Temple<br/>Charampa, Bhadrak, Odisha</p>
     <p>The celebrations will be held at a stunning heritage venue adorned with flowers, fairy lights, and the warmth of two families becoming one.</p>
     <p>🚗 <strong style="color:#9D174D">Parking:</strong> Ample on-site parking available</p>
     <p>👗 <strong style="color:#9D174D">Dress Code:</strong> Festive Indian &amp; Western Formal</p>
     <a href="https://maps.app.goo.gl/T3kcL8hYYJ7ueLms5" target="_blank" rel="noopener" class="dir-btn">📍 Get Directions</a>
   </div>
   
+</section>
+
+
+<!--════════════════════════════════════════════════════════
+    GALLERY
+════════════════════════════════════════════════════════-->
+<section class="page-section gallery-section" id="gallery">
+  <div class="gallery-bg"></div>
+  <div class="gallery-float-petals" id="gallery-float-petals"></div>
+  <div class="gallery-sparkles" id="gallery-sparkles"></div>
+  <div class="gallery-floral-bg">
+    <span class="gallery-floral-deco" style="--fr:-15deg;top:3%;left:4%">🌸</span>
+    <span class="gallery-floral-deco" style="--fr:20deg;top:6%;right:6%;animation-delay:1.5s">🌹</span>
+    <span class="gallery-floral-deco" style="--fr:10deg;bottom:10%;left:8%;animation-delay:3s">💮</span>
+    <span class="gallery-floral-deco" style="--fr:-20deg;bottom:5%;right:4%;animation-delay:2s">🌺</span>
+  </div>
+
+  <div class="sec-title reveal">
+    <div class="gold-divider"><span>✦</span></div>
+    <h2>Wedding Gallery</h2>
+    <p class="sub">♦ Precious Memories ♦</p>
+    <p class="gallery-quote">&ldquo;Our beautiful moments captured forever&rdquo;</p>
+  </div>
+
+  <div class="gallery-card-wrap reveal">
+    <div class="gallery-card">
+      <div class="gallery-card-corner-tl"></div>
+      <div class="gallery-card-corner-br"></div>
+      <div class="gallery-icon">📸</div>
+      <h3 class="gallery-card-title">Wedding Photos &amp; Videos</h3>
+      <p class="gallery-card-msg">&ldquo;Relive our beautiful memories and special moments&rdquo;</p>
+      <a href="https://drive.google.com/drive/folders/1XrKIJF-6LseT1CUMZJcvaILxqDBlr_4C?usp=drive_link" target="_blank" rel="noopener" class="gallery-btn" id="gallery-btn">
+        <span class="gallery-btn-text">View Gallery ❤️</span>
+      </a>
+      <div class="gallery-btn-hearts" id="gallery-btn-hearts"></div>
+    </div>
+  </div>
 </section>
 
 <!--════════════════════════════════════════════════════════
@@ -4105,7 +4458,7 @@ function animFlip(el){
   setTimeout(()=>el.classList.remove('flip'),150);
 }
 function startCountdown(){
-  const target=new Date('2026-07-19T11:00:00+05:30');
+  const target=new Date('2026-06-21T06:00:00+05:30');
   function tick(){
     const now=new Date();
     const diff=target-now;
@@ -4758,6 +5111,113 @@ function initHeroEffects(){
   }
 })();
 
+</script>
+
+
+<script>
+/* ════════════════════════════════════════════════════════
+   GALLERY SECTION — Premium Effects
+════════════════════════════════════════════════════════ */
+(function initGallery(){
+  // Floating petals
+  const petalContainer = document.getElementById('gallery-float-petals');
+  if(petalContainer){
+    const colors = ['#D96C8D','#F7D6DF','#E91E63','#F48FB1','#F8C8DC','#D4AF37','#FFE4E1','#FF69B4'];
+    for(let i=0;i<15;i++){
+      const p = document.createElement('div');
+      p.className = 'gallery-float-petal';
+      const sz = 6 + Math.random() * 14;
+      const c = colors[Math.floor(Math.random()*colors.length)];
+      const dur = 10 + Math.random() * 14;
+      const del = Math.random() * -16;
+      p.style.cssText = `
+        width:${sz}px;height:${sz}px;
+        background:${c};
+        left:${Math.random()*100}%;
+        bottom:-30px;
+        animation-duration:${dur}s;
+        animation-delay:${del}s;
+        border-radius:${Math.random()>0.3?'50% 10% 50% 10%':'50%'};
+      `;
+      petalContainer.appendChild(p);
+    }
+  }
+
+  // Golden sparkles
+  const spkContainer = document.getElementById('gallery-sparkles');
+  if(spkContainer){
+    for(let i=0;i<18;i++){
+      const s = document.createElement('div');
+      s.className = 'gallery-spk';
+      const sz = 2 + Math.random() * 4;
+      const dur = 2 + Math.random() * 3;
+      const del = Math.random() * 5;
+      s.style.cssText = `
+        width:${sz}px;height:${sz}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100}%;
+        animation-duration:${dur}s;
+        animation-delay:${del}s;
+      `;
+      spkContainer.appendChild(s);
+    }
+  }
+
+  // Button heart & petal particles on hover / touch
+  const btn = document.getElementById('gallery-btn');
+  const heartsContainer = document.getElementById('gallery-btn-hearts');
+  if(btn && heartsContainer){
+    const hearts = ['❤️','💖','💕','💗','💓'];
+    const flowers = ['🌸','🌹','🌺','💮','🌷'];
+
+    function createParticles(){
+      for(let i=0;i<8;i++){
+        const h = document.createElement('span');
+        h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+        h.style.cssText = `
+          position:absolute;
+          font-size:${0.7+Math.random()*1.0}rem;
+          left:${20+Math.random()*60}%;
+          top:${30+Math.random()*40}%;
+          pointer-events:none;
+          opacity:0;
+          z-index:10;
+        `;
+        heartsContainer.appendChild(h);
+        h.animate([
+          {transform:'translateY(0) scale(0.3)',opacity:0.9},
+          {transform:`translateY(${-30-Math.random()*50}px) scale(1.1) rotate(${Math.random()*30-15}deg)`,opacity:0}
+        ],{duration:1000+Math.random()*600,easing:'ease-out',fill:'forwards'});
+        setTimeout(()=>{if(h.parentNode)h.remove();},1800);
+      }
+      for(let i=0;i<6;i++){
+        const f = document.createElement('span');
+        f.textContent = flowers[Math.floor(Math.random()*flowers.length)];
+        f.style.cssText = `
+          position:absolute;
+          font-size:${0.6+Math.random()*0.8}rem;
+          left:${15+Math.random()*70}%;
+          top:${40+Math.random()*30}%;
+          pointer-events:none;
+          opacity:0;
+          z-index:10;
+        `;
+        heartsContainer.appendChild(f);
+        const tx = (Math.random()-0.5)*60;
+        f.animate([
+          {transform:'translate(0,0) scale(0.4) rotate(0deg)',opacity:0.8},
+          {transform:`translate(${tx}px,${-25-Math.random()*35}px) scale(1) rotate(${Math.random()*40}deg)`,opacity:0}
+        ],{duration:1200+Math.random()*500,easing:'ease-out',fill:'forwards'});
+        setTimeout(()=>{if(f.parentNode)f.remove();},1800);
+      }
+    }
+
+    btn.addEventListener('mouseenter', createParticles);
+    btn.addEventListener('touchstart', function(e){
+      createParticles();
+    }, {passive:true});
+  }
+})();
 </script>
 
 </body>
