@@ -1549,16 +1549,17 @@ footer{
 
 /*─── ADMIN PANEL ────────────────────────────────────────*/
 #admin-btn{
-  position:fixed;bottom:1.5rem;left:calc(1.2rem + 58px);
-  z-index:500;width:38px;height:38px;
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  width:38px;height:38px;
   border-radius:50%;cursor:pointer;
   background:rgba(255,255,255,0.5);
   border:1.5px solid rgba(212,175,55,0.45);
-  display:flex;align-items:center;justify-content:center;
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   box-shadow:0 2px 12px rgba(194,24,88,0.1);
   transition:all 0.3s ease;
   color:#B8860B;font-size:0.9rem;
+  vertical-align:middle;
 }
 #admin-btn:hover,#admin-btn:active{
   background:rgba(248,200,220,0.5);
@@ -1704,6 +1705,58 @@ footer{
   opacity:0;transition:opacity 0.3s ease;
 }
 .admin-pw-error.show{opacity:1}
+/*─── RSVP THANK YOU PREMIUM ────────────────────────────*/
+.rsvp-ok{
+  display:none;
+  text-align:center;
+  padding:2.5rem 1rem;
+  animation:rsvpFadeIn 0.8s ease forwards;
+}
+@keyframes rsvpFadeIn{
+  from{opacity:0;transform:translateY(20px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.rsvp-ok .check{font-size:3rem;animation:heartBeat 1.2s ease-in-out infinite}
+.rsvp-ok h3{
+  font-family:'Great Vibes',cursive;
+  font-size:2.8rem;
+  color:#D6336C;
+  margin-top:0.6rem;
+  text-shadow:0 0 20px rgba(233,30,99,0.25);
+  animation:thankTitleGlow 2.5s ease-in-out infinite;
+}
+@keyframes thankTitleGlow{
+  0%,100%{text-shadow:0 0 20px rgba(233,30,99,0.2)}
+  50%{text-shadow:0 0 40px rgba(233,30,99,0.45),0 0 60px rgba(233,30,99,0.2)}
+}
+.rsvp-ok p{
+  color:#5C4033;
+  margin-top:0.5rem;
+  font-style:italic;
+  font-size:1.05rem;
+}
+/* Edit Response button */
+.rsvp-edit-btn{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  margin-top:1.2rem;padding:0.55rem 1.4rem;
+  background:rgba(255,255,255,0.55);
+  border:1.5px solid rgba(212,175,55,0.55);
+  border-radius:10px;
+  font-family:'Cinzel',serif;font-size:0.62rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:#B8860B;font-weight:600;cursor:pointer;
+  transition:all 0.35s ease;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 4px 15px rgba(194,24,88,0.08);
+}
+.rsvp-edit-btn:hover,.rsvp-edit-btn:active{
+  background:rgba(248,200,220,0.5);
+  border-color:rgba(233,30,99,0.5);
+  color:#D6336C;
+  transform:translateY(-2px);
+  box-shadow:0 8px 25px rgba(194,24,88,0.15),0 0 20px rgba(212,175,55,0.1);
+}
+
 /* Confirm delete popup */
 .admin-confirm-overlay{
   position:fixed;inset:0;z-index:3000;
@@ -1822,9 +1875,6 @@ footer{
 <button id="music-btn" aria-label="Toggle music">
   <span class="music-icon" id="music-icon">🎵</span>
 </button>
-
-<!--─── ADMIN BUTTON ─────────────────────────────────────-->
-<button id="admin-btn" aria-label="Admin panel" title="Host Admin Panel">⚙️</button>
 
 <!--─── BACK TO TOP ──────────────────────────────────────-->
 <button id="btt" aria-label="Back to top">↑</button>
@@ -2117,9 +2167,10 @@ footer{
 
       <div class="rsvp-ok" id="rsvp-ok">
         <div class="check">💌</div>
-        <h3>Thank You!</h3>
-        <p>Your presence will make our celebration complete.</p>
-        <p style="margin-top:0.5rem;opacity:0.6;font-size:0.9rem">We look forward to celebrating with you!</p>
+        <h3>Thank You ❤️</h3>
+        <p>Thank you for sharing our special day</p>
+        <p style="margin-top:0.3rem;opacity:0.6;font-size:0.9rem">We look forward to celebrating with you!</p>
+        <button type="button" class="rsvp-edit-btn" id="rsvp-edit-btn">✎ Edit Response</button>
       </div>
     </div>
   </div>
@@ -2159,6 +2210,7 @@ footer{
     <a href="#" aria-label="Facebook">👍</a>
     <a href="https://wa.me/" aria-label="WhatsApp">💬</a>
     <a href="mailto:debashispriyanka2026@example.com" aria-label="Email">✉️</a>
+    <button id="admin-btn" aria-label="Admin panel" title="Host Admin Panel">⚙️</button>
   </div>
   <p class="ft-copy">© 2026 Debashis & Priyanka · Made with ❤️</p>
 </footer>
@@ -2779,28 +2831,59 @@ function initEventCards(){
 }
 
 /* ════════════════════════════════════════════════════════
-   RSVP — localStorage + Premium Submit Animation
+   RSVP — localStorage + One-Time Submit + Edit + Admin
 ════════════════════════════════════════════════════════ */
 const RSVP_STORAGE_KEY = 'weddingRSVPRecords';
+const RSVP_SUBMITTED_KEY = 'weddingRSVPSubmitted';
+const RSVP_USER_KEY = 'weddingUserRSVP';
 
 function initRsvp(){
+  const form = document.getElementById('rsvp-form');
+  const ok = document.getElementById('rsvp-ok');
+  const editBtn = document.getElementById('rsvp-edit-btn');
+  const submitBtn = document.querySelector('.rsvp-premium-wrap .submit-btn');
+
   // Ripple effect for premium button
-  const btn=document.querySelector('.rsvp-premium-wrap .submit-btn');
-  if(btn){
-    btn.addEventListener('click',function(e){
-      const rect=btn.getBoundingClientRect();
+  if(submitBtn){
+    submitBtn.addEventListener('click',function(e){
+      const rect=submitBtn.getBoundingClientRect();
       const ripple=document.createElement('span');
       ripple.className='ripple';
       const size=Math.max(rect.width,rect.height);
       ripple.style.width=ripple.style.height=size+'px';
       ripple.style.left=(e.clientX-rect.left-size/2)+'px';
       ripple.style.top=(e.clientY-rect.top-size/2)+'px';
-      btn.appendChild(ripple);
+      submitBtn.appendChild(ripple);
       setTimeout(()=>ripple.remove(),600);
     });
   }
 
-  document.getElementById('rsvp-form').addEventListener('submit',function(e){
+  // Check if already submitted — show Thank You instead of form
+  try{
+    if(localStorage.getItem(RSVP_SUBMITTED_KEY)==='true'){
+      form.style.display='none';
+      ok.style.display='block';
+    }
+  }catch(e){}
+
+  // Edit button: open form with previous values
+  if(editBtn){
+    editBtn.addEventListener('click',()=>{
+      try{
+        const saved = JSON.parse(localStorage.getItem(RSVP_USER_KEY)||'{}');
+        if(saved.name) document.getElementById('rn').value = saved.name;
+        if(saved.phone) document.getElementById('rp').value = saved.phone;
+        if(saved.email) document.getElementById('re').value = saved.email;
+        if(saved.guests) document.getElementById('rg').value = saved.guests;
+        if(saved.event) document.getElementById('rev').value = saved.event;
+        if(saved.message) document.getElementById('rm').value = saved.message;
+      }catch(e){}
+      ok.style.display='none';
+      form.style.display='block';
+    });
+  }
+
+  form.addEventListener('submit',function(e){
     e.preventDefault();
     const n=document.getElementById('rn').value.trim();
     const p=document.getElementById('rp').value.trim();
@@ -2820,25 +2903,41 @@ function initRsvp(){
       ts: now.toISOString()
     };
 
-    // Save to localStorage (append to existing)
+    // Save user's own RSVP data
     try{
-      const arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
-      arr.push(data);
+      localStorage.setItem(RSVP_USER_KEY, JSON.stringify(data));
+      localStorage.setItem(RSVP_SUBMITTED_KEY, 'true');
+    }catch(e){}
+
+    // Append or update in records array
+    try{
+      let arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
+      // If editing, find existing record by phone and update it
+      const existingIdx = arr.findIndex(r => r.phone === p);
+      if(existingIdx >= 0){
+        arr[existingIdx] = data;
+      }else{
+        arr.push(data);
+      }
       localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(arr));
     }catch(err){console.error('RSVP save error:',err);}
 
     // Clear form
     this.reset();
 
-    // Show premium success with confetti + petals burst
+    // Show Thank You with premium animations
     this.style.display='none';
-    const ok = document.getElementById('rsvp-ok');
-    ok.innerHTML = '<div class="check">💌</div><h3>Thank You!</h3><p>Thank you for sharing our special day ❤️</p><p style="margin-top:0.5rem;opacity:0.6;font-size:0.9rem">We look forward to celebrating with you!</p>';
     ok.style.display='block';
+    // Re-trigger animation
+    ok.style.animation='none';
+    ok.offsetHeight; // reflow
+    ok.style.animation='rsvpFadeIn 0.8s ease forwards';
 
-    // Launch confetti + petal burst
+    // Launch confetti + petal burst + sparkles + hearts
     launchConfetti();
     launchRsvpPetals();
+    launchRsvpSparkles();
+    launchRsvpHearts();
   });
 }
 
@@ -2870,6 +2969,57 @@ function launchRsvpPetals(){
   }
 }
 
+// Golden sparkle burst
+function launchRsvpSparkles(){
+  const wrap = document.querySelector('.rsvp-premium-wrap');
+  if(!wrap) return;
+  for(let i=0;i<15;i++){
+    const sp = document.createElement('div');
+    const size = 2 + Math.random()*5;
+    sp.style.cssText = `
+      position:absolute;
+      width:${size}px;height:${size}px;
+      background:radial-gradient(circle,#D4AF37,#fff);
+      border-radius:50%;
+      left:${20+Math.random()*60}%;top:${20+Math.random()*60}%;
+      pointer-events:none;z-index:101;
+      box-shadow:0 0 6px rgba(212,175,55,0.8);
+    `;
+    wrap.appendChild(sp);
+    const tx = (Math.random()-0.5)*200;
+    const ty = -30 - Math.random()*100;
+    sp.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:`translate(${tx}px,${ty}px) scale(0)`,opacity:0}
+    ],{duration:800+Math.random()*600,easing:'ease-out',fill:'forwards'});
+    setTimeout(()=>{if(sp.parentNode)sp.remove();},1500);
+  }
+}
+
+// Heart particles
+function launchRsvpHearts(){
+  const wrap = document.querySelector('.rsvp-premium-wrap');
+  if(!wrap) return;
+  const hearts = ['❤️','💖','💕','💗','💓'];
+  for(let i=0;i<12;i++){
+    const h = document.createElement('span');
+    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    h.style.cssText = `
+      position:absolute;
+      font-size:${0.7+Math.random()*1.2}rem;
+      left:${15+Math.random()*70}%;top:${30+Math.random()*40}%;
+      pointer-events:none;z-index:102;
+      opacity:0;
+    `;
+    wrap.appendChild(h);
+    h.animate([
+      {transform:'translateY(0) scale(0.3)',opacity:0.9},
+      {transform:`translateY(${-40-Math.random()*60}px) scale(1.2) rotate(${Math.random()*30-15}deg)`,opacity:0}
+    ],{duration:1200+Math.random()*800,easing:'ease-out',fill:'forwards'});
+    setTimeout(()=>{if(h.parentNode)h.remove();},2200);
+  }
+}
+
 /* ════════════════════════════════════════════════════════
    EVENT STATUS SYSTEM
 ════════════════════════════════════════════════════════ */
@@ -2883,9 +3033,7 @@ function initEventStatus(){
       const badge = card.querySelector('.ev-status');
       const text = badge.querySelector('.ev-status-text');
       if(!badge) return;
-      // Remove old classes
       badge.classList.remove('upcoming','live','completed');
-      // Remove old sparkle particles
       badge.querySelectorAll('.ev-status-live-sparkle').forEach(s=>s.remove());
 
       if(now < start){
@@ -2894,7 +3042,6 @@ function initEventStatus(){
       }else if(now >= start && now <= end){
         badge.classList.add('live');
         text.textContent = 'Live Now';
-        // Add sparkle particles for live
         for(let i=0;i<3;i++){
           const sp = document.createElement('span');
           sp.className = 'ev-status-live-sparkle';
@@ -2909,7 +3056,7 @@ function initEventStatus(){
     });
   }
   update();
-  setInterval(update,30000); // Check every 30 seconds
+  setInterval(update,30000);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2979,13 +3126,15 @@ function initAdminPanel(){
   });
 
   confirmYes.addEventListener('click',()=>{
-    if(!adminDeleteTarget) return;
+    if(adminDeleteTarget === null) return;
     try{
-      const arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
-      const filtered = arr.filter((_,idx)=>idx !== adminDeleteTarget);
-      localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(filtered));
+      let arr = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
+      if(Array.isArray(arr) && adminDeleteTarget >= 0 && adminDeleteTarget < arr.length){
+        arr.splice(adminDeleteTarget, 1);
+        localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(arr));
+      }
       renderAdminRecords();
-    }catch(err){}
+    }catch(err){console.error('Delete error:',err);}
     confirmOverlay.classList.remove('show');
     adminDeleteTarget = null;
   });
@@ -3005,7 +3154,7 @@ function renderAdminRecords(){
     records = JSON.parse(localStorage.getItem(RSVP_STORAGE_KEY)||'[]');
   }catch(err){}
 
-  if(records.length === 0){
+  if(!Array.isArray(records) || records.length === 0){
     list.innerHTML = '<div class="admin-empty">No RSVP records yet</div>';
     totalGuests.textContent = '0';
     totalRecords.textContent = '0';
